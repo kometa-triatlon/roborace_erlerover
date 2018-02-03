@@ -46,7 +46,7 @@ def main():
                 len(timestamps[args.camera_topic]))
 
     steering = pd.Series(values_rc, index=timestamps[args.rc_topic])
-    steering_camera = steering.reindex(index=timestamps[args.camera_topic], method='backfill', limit=1)
+    steering_camera = steering.reindex(index=timestamps[args.camera_topic], method='nearest', tolerance=33)
     if args.interpolate:
         logger.info('Interpolating missing values')
         steering_camera = steering_camera.interpolate(method='spline', order=2)
@@ -69,7 +69,7 @@ def main():
                              (args.img_width, args.img_height))
             if sample_id < 10:
                 logger.debug('Image shape: [%d,%d,%d]', img.shape[0], img.shape[1], img.shape[2])
-            data[sample_id, :, :, :] = img.transpose([2, 0, 1])
+            data[sample_id, :, :, :] = img.transpose([2, 0, 1]) / 255.0
             label[sample_id] = (value - args.zero_value) / args.amplitude
             if label[sample_id] < -1.0 or label[sample_id] > 1.0:
                 raise ValueError("Value = %.3f (%f) at %d" % (label[sample_id], value, sample_id))
