@@ -1,0 +1,6 @@
+#!/bin/bash
+dest_dir=dump/train
+input=data/train.bag
+
+mkdir -p $dest_dir/camera/img
+python tools/bag2images.py $input $dest_dir/camera.csv $dest_dir/camera/img /zed/rgb/image_rect_color

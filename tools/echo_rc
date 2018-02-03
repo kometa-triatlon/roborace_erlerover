@@ -1,0 +1,2 @@
+#!/bin/bash
+rostopic echo -b $1 -p /mavros/rc/in

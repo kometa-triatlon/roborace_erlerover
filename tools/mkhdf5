@@ -1,0 +1,31 @@
+#!/bin/bash
+
+zero_value=1500
+amplitude=500
+w=320
+h=180
+camera_topic=/zed/rgb/image_rect_color
+rc_topic=/mavros/rc/in
+channel=0
+
+python tools/bag2hdf5.py --interpolate \
+       --zero_value $zero_value \
+       --amplitude $amplitude \
+       --img_width $w \
+       --img_height $h \
+       data/train.bag \
+       $camera_topic \
+       $rc_topic \
+       $channel \
+       data/train.h5
+
+python tools/bag2hdf5.py \
+       --zero_value $zero_value \
+       --amplitude $amplitude \
+       --img_width $w \
+       --img_height $h \
+       data/valid.bag \
+       $camera_topic \
+       $rc_topic \
+       $channel \
+       data/valid.h5
