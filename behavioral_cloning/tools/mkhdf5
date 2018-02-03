@@ -8,7 +8,7 @@ camera_topic=/zed/rgb/image_rect_color
 rc_topic=/mavros/rc/in
 channel=0
 
-python tools/bag2hdf5.py --interpolate \
+python behavioral_cloning/tools/bag2hdf5.py --interpolate \
        --zero_value $zero_value \
        --amplitude $amplitude \
        --img_width $w \
@@ -17,9 +17,9 @@ python tools/bag2hdf5.py --interpolate \
        $camera_topic \
        $rc_topic \
        $channel \
-       data/train.h5
+       behavioral_cloning/data/train.h5
 
-python tools/bag2hdf5.py \
+python behavioral_cloning/tools/bag2hdf5.py \
        --zero_value $zero_value \
        --amplitude $amplitude \
        --img_width $w \
@@ -28,4 +28,4 @@ python tools/bag2hdf5.py \
        $camera_topic \
        $rc_topic \
        $channel \
-       data/valid.h5
+       behavioral_cloning/data/valid.h5
