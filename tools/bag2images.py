@@ -23,6 +23,7 @@ def main():
     parser.add_argument('output_log_file', help='Output log file')
     parser.add_argument("output_img_dir", help="Output image directory.")
     parser.add_argument("image_topic", help="Image topic.")
+    parser.add_argument("--stop_after", type=int, default=-1)
 
     args = parser.parse_args()
 
@@ -40,6 +41,9 @@ def main():
             print count
 
             count += 1
+
+            if args.stop_after > -1 and count >= args.stop_after:
+                break
 
         bag.close()
 
