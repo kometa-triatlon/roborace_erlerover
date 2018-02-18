@@ -1,5 +1,4 @@
 name: "net"
-
 layer {
   name: "data"
   type: "Input"
@@ -31,6 +30,7 @@ layer {
     num_output: 8
     kernel_size: 7
     stride: 2
+    pad: 3
     weight_filler {
       type: "xavier"
     }
@@ -124,6 +124,7 @@ layer {
     num_output: 32
     kernel_size: 3
     stride: 1
+    pad: 2
     weight_filler {
       type: "xavier"
     }
@@ -187,23 +188,22 @@ layer {
   top: "conv4"
 }
 
-#layer {
-#  name: "pool4"
-#  type: "Pooling"
-#  bottom: "conv4"
-#  top: "pool4"
-#  pooling_param {
-#    pool: MAX
-#    kernel_size: 2
-#    stride: 2
-#  }
-#}
+layer {
+  name: "pool4"
+  type: "Pooling"
+  bottom: "conv4"
+  top: "pool4"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
 
 layer {
   name: "fc1"
   type: "InnerProduct"
-#  bottom: "pool4"
-  bottom: "conv4"
+  bottom: "pool4"
   top: "fc1"
   param {
     lr_mult: 1
@@ -214,7 +214,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 128
+    num_output: 64
     weight_filler {
       type: "xavier"
     }
@@ -225,15 +225,15 @@ layer {
   }
 }
 
-#layer {
-#  name: "dropout5"
-#  type: "Dropout"
-#  bottom: "fc1"
-#  top: "fc1"
-#  dropout_param {
-#    dropout_ratio: 0.5
-#  }
-#}
+layer {
+  name: "dropout5"
+  type: "Dropout"
+  bottom: "fc1"
+  top: "fc1"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
 
 layer {
   name: "fc2"
@@ -259,16 +259,6 @@ layer {
     }
   }
 }
-
-#layer {
-#  name: "dropout6"
-#  type: "Dropout"
-#  bottom: "fc2"
-#  top: "fc2"
-#  dropout_param {
-#    dropout_ratio: 0.5
-#  }
-#}
 
 layer {
   name: "fc3"
