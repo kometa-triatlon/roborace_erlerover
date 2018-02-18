@@ -1,7 +1,10 @@
 #!/bin/bash
 
+id=02_HAGL
+
 zero_value=1500
 amplitude=500
+c=3
 w=320
 h=180
 camera_topic=/zed/rgb/image_rect_color
@@ -11,21 +14,23 @@ channel=0
 python behavioral_cloning/tools/bag2hdf5.py --interpolate \
        --zero_value $zero_value \
        --amplitude $amplitude \
+       --img_channels $c \
        --img_width $w \
        --img_height $h \
-       data/train.bag \
+       data/$id/train01.bag \
        $camera_topic \
        $rc_topic \
        $channel \
-       behavioral_cloning/data/train.h5
+       behavioral_cloning/data/$id/train01.h5
 
-python behavioral_cloning/tools/bag2hdf5.py \
+python behavioral_cloning/tools/bag2hdf5.py --interpolate \
        --zero_value $zero_value \
        --amplitude $amplitude \
+       --img_channels $c \
        --img_width $w \
        --img_height $h \
-       data/valid.bag \
+       data/$id/train02.bag \
        $camera_topic \
        $rc_topic \
        $channel \
-       behavioral_cloning/data/valid.h5
+       behavioral_cloning/data/$id/train02.h5

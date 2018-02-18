@@ -24,6 +24,7 @@ def main():
     parser.add_argument('--interpolate', action='store_true', help='Interpolate')
     parser.add_argument('--zero_value', type=float, required=True)
     parser.add_argument('--amplitude', type=float, required=True)
+    parser.add_argument('--img_channels', type=int, default=3)
     parser.add_argument('--img_width', type=int, default=1280)
     parser.add_argument('--img_height', type=int, default=720)
 
@@ -51,11 +52,13 @@ def main():
         logger.info('Interpolating missing values')
         steering_camera = steering_camera.interpolate(method='spline', order=2)
 
-    num_channels = 3
+    steering_camera.clip(args.zero_value-args.amplitude, args.zero_value+args.amplitude, inplace=True)
     num_samples = steering_camera.count()
 
-    logger.info("Writing %d images of size %dx%dx%d", num_samples, num_channels, args.img_height, args.img_width)
-    data = np.zeros((num_samples, num_channels, args.img_height, args.img_width), dtype=np.float32)
+    if args.img_channels == 1:
+        logger.info("Converting image into greyscale")
+    logger.info("Writing %d images of size %dx%dx%d", num_samples, args.img_channels, args.img_height, args.img_width)
+    data = np.zeros((num_samples, args.img_channels, args.img_height, args.img_width), dtype=np.float32)
     label = np.zeros((num_samples, 1), dtype=np.float32)
 
     sample_id = 0
@@ -65,9 +68,12 @@ def main():
             timestamp = t.to_nsec()/1000000
             value = steering_camera[timestamp]
             if np.isnan(value): continue
-            img = cv2.resize(bridge.imgmsg_to_cv2(msg, desired_encoding="passthrough"),
-                             (args.img_width, args.img_height))
-            if sample_id < 10:
+            img = bridge.imgmsg_to_cv2(msg, desired_encoding="passthrough")
+            img = cv2.resize(img, (args.img_width, args.img_height))
+            if args.img_channels == 1:
+                img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+                img = img[:, :, np.newaxis]
+            if sample_id < 1:
                 logger.debug('Image shape: [%d,%d,%d]', img.shape[0], img.shape[1], img.shape[2])
             data[sample_id, :, :, :] = img.transpose([2, 0, 1]) / 255.0
             label[sample_id] = (value - args.zero_value) / args.amplitude
