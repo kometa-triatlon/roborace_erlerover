@@ -1,15 +1,19 @@
 #!/bin/bash
 
-id=02_HAGL
+id=04_HAGL
 
-zero_value=1500
-amplitude=500
+zero_value=1560
+amplitude=600
 c=3
 w=320
 h=180
-camera_topic=/zed/rgb/image_rect_color
+camera_topic=/zed/right/image_rect_color
 rc_topic=/mavros/rc/in
 channel=0
+src_dir=/media/dprylipko/sdcard
+dest_dir=behavioral_cloning/data/$id
+
+for fold in train01 train02 train03; do
 
 python behavioral_cloning/tools/bag2hdf5.py --interpolate \
        --zero_value $zero_value \
@@ -17,20 +21,25 @@ python behavioral_cloning/tools/bag2hdf5.py --interpolate \
        --img_channels $c \
        --img_width $w \
        --img_height $h \
-       data/$id/train01.bag \
+       $src_dir/$fold.bag \
        $camera_topic \
        $rc_topic \
        $channel \
-       behavioral_cloning/data/$id/train01.h5
+       $dest_dir/$fold.h5
+done
 
-python behavioral_cloning/tools/bag2hdf5.py --interpolate \
+
+for fold in valid01 valid02; do
+
+python behavioral_cloning/tools/bag2hdf5.py \
        --zero_value $zero_value \
        --amplitude $amplitude \
        --img_channels $c \
        --img_width $w \
        --img_height $h \
-       data/$id/train02.bag \
+       $src_dir/$fold.bag \
        $camera_topic \
        $rc_topic \
        $channel \
-       behavioral_cloning/data/$id/train02.h5
+       $dest_dir/$fold.h5
+done
