@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<launch>  
+  <node name="camera_transform" pkg="input_transform" type="camera_transform_node">
+    <param name="camera_topic" value="/zed/right/image_rect_color" />
+    <param name="output_topic" value="/camera_transform/output" />
+  </node>
+</launch>
