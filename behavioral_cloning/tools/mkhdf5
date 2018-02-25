@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/bin/bash -x
 
-id=04_HAGL
+id=04_HAGL_p2
 
 zero_value=1560
 amplitude=600
-c=3
+c=1
 w=320
 h=180
 camera_topic=/zed/right/image_rect_color
@@ -12,6 +12,8 @@ rc_topic=/mavros/rc/in
 channel=0
 src_dir=/media/dprylipko/sdcard
 dest_dir=behavioral_cloning/data/$id
+preprocessing="resize rgb2gray perspective histEq"
+transform_param=tools/perspective_transform.txt
 
 for fold in train01 train02 train03; do
 
@@ -21,12 +23,15 @@ python behavioral_cloning/tools/bag2hdf5.py --interpolate \
        --img_channels $c \
        --img_width $w \
        --img_height $h \
+       --preprocessing $preprocessing \
+       --perspective_param $transform_param \
        $src_dir/$fold.bag \
        $camera_topic \
        $rc_topic \
        $channel \
        $dest_dir/$fold.h5
 done
+
 
 
 for fold in valid01 valid02; do
@@ -37,6 +42,8 @@ python behavioral_cloning/tools/bag2hdf5.py \
        --img_channels $c \
        --img_width $w \
        --img_height $h \
+       --preprocessing $preprocessing \
+       --perspective_param $transform_param \
        $src_dir/$fold.bag \
        $camera_topic \
        $rc_topic \

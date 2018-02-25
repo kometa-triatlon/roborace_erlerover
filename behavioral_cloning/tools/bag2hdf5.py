@@ -14,6 +14,27 @@ import rosbag
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
+
+def preprocess(img, preprocessing, dest_size, perspective_param):
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+    for op in preprocessing:
+        if op == 'resize':
+            img = cv2.resize(img, dest_size)
+        elif op == 'rgb2gray':
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+            img = img[:, :, np.newaxis]
+        elif op == 'perspective':
+            if perspective_param is None:
+                raise ValueError('Perspective param not provided')
+            img = cv2.warpPerspective(img, perspective_param, dest_size)
+            img = img[:, :, np.newaxis]
+        elif op == 'histEq':
+            img = clahe.apply(img)
+            img = img[:, :, np.newaxis]
+
+    return img
+
+
 def main():
     parser = argparse.ArgumentParser(description="Extract images from a ROS bag.")
     parser.add_argument("bag_file", help="Input ROS bag.")
@@ -27,6 +48,8 @@ def main():
     parser.add_argument('--img_channels', type=int, default=3)
     parser.add_argument('--img_width', type=int, default=1280)
     parser.add_argument('--img_height', type=int, default=720)
+    parser.add_argument('--preprocessing', nargs='*')
+    parser.add_argument('--perspective_param')
 
     args = parser.parse_args()
 
@@ -55,11 +78,12 @@ def main():
     steering_camera.clip(args.zero_value-args.amplitude, args.zero_value+args.amplitude, inplace=True)
     num_samples = steering_camera.count()
 
-    if args.img_channels == 1:
-        logger.info("Converting image into greyscale")
     logger.info("Writing %d images of size %dx%dx%d", num_samples, args.img_channels, args.img_height, args.img_width)
     data = np.zeros((num_samples, args.img_channels, args.img_height, args.img_width), dtype=np.float32)
     label = np.zeros((num_samples, 1), dtype=np.float32)
+
+    if args.perspective_param:
+        perspective_param = np.loadtxt(args.perspective_param)
 
     sample_id = 0
     bridge = CvBridge()
@@ -69,10 +93,10 @@ def main():
             value = steering_camera[timestamp]
             if np.isnan(value): continue
             img = bridge.imgmsg_to_cv2(msg, desired_encoding="passthrough")
-            img = cv2.resize(img, (args.img_width, args.img_height))
-            if args.img_channels == 1:
-                img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-                img = img[:, :, np.newaxis]
+
+            if args.preprocessing:
+                img = preprocess(img, args.preprocessing, (args.img_width, args.img_height), perspective_param)
+
             if sample_id < 1:
                 logger.debug('Image shape: [%d,%d,%d]', img.shape[0], img.shape[1], img.shape[2])
             data[sample_id, :, :, :] = img.transpose([2, 0, 1]) / 255.0
