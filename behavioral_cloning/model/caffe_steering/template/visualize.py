@@ -23,7 +23,7 @@ def draw_pred(frame, w, h, gt, pred):
 
 if __name__ == '__main__':
     model = 'deploy.prototxt'
-    weights = 'final.caffemodel'
+    weights = 'weights.caffemodel'
     h5path = open('validdat.txt').readlines()[0].strip()
     f = h5py.File(h5path, 'r')
     data = f['data']

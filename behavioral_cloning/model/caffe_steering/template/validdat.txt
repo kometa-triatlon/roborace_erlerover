@@ -1,1 +1,2 @@
-/home/dprylipko/Work/erlerover/behavioral_cloning/data/01_HAGL/valid.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/04_HAGL_p2/valid01.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/04_HAGL_p2/valid02.h5

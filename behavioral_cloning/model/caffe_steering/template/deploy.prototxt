@@ -6,7 +6,7 @@ layer {
   input_param {
     shape: {
       dim: 1
-      dim: 3
+      dim: 1
       dim: 180
       dim: 320
     }
@@ -27,7 +27,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 8
+    num_output: 16
     kernel_size: 7
     stride: 2
     pad: 3
@@ -124,7 +124,7 @@ layer {
     num_output: 32
     kernel_size: 3
     stride: 1
-    pad: 2
+    pad: 1
     weight_filler {
       type: "xavier"
     }

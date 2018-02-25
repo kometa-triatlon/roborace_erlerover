@@ -1,1 +1,3 @@
-/home/dprylipko/Work/erlerover/behavioral_cloning/data/01_HAGL/train.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/04_HAGL_p2/train01.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/04_HAGL_p2/train02.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/04_HAGL_p2/train03.h5
