@@ -26,7 +26,7 @@ void ControlModel::init(const std::string& defPath, const std::string& weightsPa
 float ControlModel::predictSteering(sensor_msgs::Image::ConstPtr img) {
     cv_bridge::CvImagePtr cv_ptr;
     try {
-        cv_ptr = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::TYPE_32FC3);
+        cv_ptr = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::TYPE_8UC1);
         cv::Mat srcImg(cv_ptr->image);
 
         std::vector<cv::Mat> inputChannels;

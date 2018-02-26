@@ -23,7 +23,7 @@ class CameraTransform
     image_transport::ImageTransport mImageTransport;
     image_transport::Subscriber mCameraSubscriber;
     image_transport::Publisher mOutputPublisher;
-    float mProcessRate = 30.f;
+    float mProcessRate = 15.f;
 
     cv::Mat M;
     void imageCallback(const sensor_msgs::Image::ConstPtr& msg);

@@ -2,14 +2,14 @@
 
 <launch>
   
-  <arg name="model_root" value="/home/dprylipko/Work/erlerover/behavioral_cloning/model/caffe_steering/01_HAGL" />
+  <arg name="model_root" value="/home/dprylipko/Work/erlerover/behavioral_cloning/model/caffe_steering/04_HAGL_p2" />
   
   <node name="steering_control" pkg="behavioral_cloning" type="behavioral_cloning_node">
-    <param name="camera_topic" value="/zed/rgb/image_rect_color" />
+    <param name="camera_topic" value="/camera_transform/output" />
     <param name="output_topic" value="/behavioral_cloning/steering_control" />
     <param name="processing_rate" value="15.0" />
     <param name="model_path" value="$(arg model_root)/deploy.prototxt" />
-    <param name="model_weights" value="$(arg model_root)/final.caffemodel" />
+    <param name="model_weights" value="$(arg model_root)/weights.caffemodel" />
     <param name="model_input" value="data" />
     <param name="model_output" value="pred" />
   </node>
