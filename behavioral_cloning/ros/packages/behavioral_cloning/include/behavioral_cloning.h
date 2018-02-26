@@ -17,9 +17,9 @@ class SteeringControl
 
   private:
 
-    const float ZERO_STEERING_VALUE = 1500.f;
-    const float STEERING_AMPLITUDE = 400.f;
-    const int STEERING_CHANNEL = 0;
+    float mZeroValue;
+    float mAmplitude;
+    int mMavrosChannel;
 
     sensor_msgs::Image::ConstPtr mLastImage{nullptr};
     ros::Publisher mOutputPublisher;

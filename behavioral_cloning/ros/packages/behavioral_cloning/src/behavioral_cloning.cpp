@@ -1,6 +1,7 @@
 #include "behavioral_cloning.h"
 
 SteeringControl::SteeringControl() {
+
     ROS_INFO("Starting behavioral cloning steering control node");
     ros::NodeHandle nh("~");
 
@@ -23,6 +24,10 @@ SteeringControl::SteeringControl() {
 
     std::string outputLayer;
     nh.param<std::string>("model_output", outputLayer, "");
+
+    nh.param("zero_value", mZeroValue, 1500.f);
+    nh.param("amplitude", mAmplitude, 700.f);
+    nh.param("channel", mMavrosChannel, 1);
 
     ROS_INFO("Camera topic: %s", cameraTopic.c_str());
     ROS_INFO("Output topic: %s", outputTopic.c_str());
@@ -50,11 +55,11 @@ void SteeringControl::spin() {
         if (mLastImage != nullptr) {
 
             int steering_value = static_cast<int>(
-                ZERO_STEERING_VALUE + STEERING_AMPLITUDE * mModel.predictSteering(mLastImage)
+                mZeroValue + mAmplitude * mModel.predictSteering(mLastImage)
                                                   );
 
             auto msg = boost::make_shared<mavros_msgs::OverrideRCIn>();
-            msg->channels[STEERING_CHANNEL] = steering_value;
+            msg->channels[mMavrosChannel] = steering_value;
             mOutputPublisher.publish(msg);
         }
         ros::spinOnce();
