@@ -2,20 +2,18 @@
 
 <launch>
   
-  <arg name="model_root" value="/home/nvidia/roborace_erlerover/behavioral_cloning/model/caffe_steering/04_HAGL_p2" />
+  <arg name="model_root" value="/home/nvidia/roborace_erlerover/behavioral_cloning/model/caffe_steering/11_Olympiastadion" />
   
   <node name="steering_control" pkg="behavioral_cloning" type="behavioral_cloning_node">
     <param name="camera_topic" value="/camera_transform/output" />
-
 <!--
     <param name="output_topic" value="/behavioral_cloning/steering_control" />
 -->
-    
     <param name="output_topic" value="/mavros/rc/override" />
     
-    <param name="processing_rate" value="15.0" />
+    <param name="processing_rate" value="30.0" />
     <param name="zero_value" value="1560.0" />
-    <param name="amplitude" value="600.0" />
+    <param name="amplitude" value="750.0" />
     <param name="channel" value="0" />
     
     <param name="model_path" value="$(arg model_root)/deploy.prototxt" />
