@@ -1,21 +1,20 @@
 # The training protocol buffer definition
 net: "trainval.prototxt"
-test_iter: 106
-test_interval: 195
-base_lr: 0.001
-weight_decay : 0.0005
+test_iter: 56
+test_interval: 583
+base_lr: 0.0005
+weight_decay : 0.0001
 type : "Adam"
 momentum: 0.9
 momentum2: 0.999
 lr_policy: "step"
-gamma: 0.5
+gamma: 0.25
 #power: 0.5
-stepsize: 1000
-display: 195
-max_iter: 15000
-#max_iter: 50000
+stepsize: 583
+display: 583
+max_iter: 5830
 # snapshot intermediate results
-snapshot: 195
+snapshot: 583
 snapshot_prefix: "train/steering"
 solver_mode: GPU
 random_seed: 777

@@ -1,3 +1,11 @@
-/home/dprylipko/Work/erlerover/behavioral_cloning/data/04_HAGL_p2/train01.h5
-/home/dprylipko/Work/erlerover/behavioral_cloning/data/04_HAGL_p2/train02.h5
-/home/dprylipko/Work/erlerover/behavioral_cloning/data/04_HAGL_p2/train03.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/09_Olympiastadion/train01.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/09_Olympiastadion/train02.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/09_Olympiastadion/train03.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/09_Olympiastadion/train04.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/09_Olympiastadion/train05.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/09_Olympiastadion/train06.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/09_Olympiastadion/train07.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/09_Olympiastadion/train08.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/09_Olympiastadion/train09.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/09_Olympiastadion/train_corr.h5
+/home/dprylipko/Work/erlerover/behavioral_cloning/data/09_Olympiastadion/train_fast.h5

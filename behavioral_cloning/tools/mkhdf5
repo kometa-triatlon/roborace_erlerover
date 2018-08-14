@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-id=08_HAGL_Insight
+id=09_Olympiastadion
 
 zero_value=1560
 amplitude=600
@@ -15,9 +15,28 @@ dest_dir=behavioral_cloning/data/$id
 preprocessing="resize rgb2gray perspective histEq"
 transform_param=playground/perspective_transform.txt
 
-for fold in train02; do
+for fold in train08 train09; do
 
 python behavioral_cloning/tools/bag2hdf5.py --interpolate \
+       --zero_value $zero_value \
+       --amplitude $amplitude \
+       --img_channels $c \
+       --img_width $w \
+       --img_height $h \
+       --preprocessing $preprocessing \
+       --perspective_param $transform_param \
+       $src_dir/$fold.bag \
+       $camera_topic \
+       $rc_topic \
+       $channel \
+       $dest_dir/$fold.h5
+done
+
+exit
+
+for fold in valid01 valid02; do
+
+python behavioral_cloning/tools/bag2hdf5.py \
        --zero_value $zero_value \
        --amplitude $amplitude \
        --img_channels $c \

@@ -42,7 +42,7 @@ if __name__ == '__main__':
         net.blobs['data'].data[...] = frame
         out = net.forward()
         frame = draw_pred(frame[0, :, :], imwidth, imheight, gt, out['pred'][0])
-        cv2.imshow('Prediction', frame)
-        cv2.waitKey(200)
+        cv2.imshow('Prediction', cv2.resize(frame, (imwidth * 4, imheight * 4)))
+        cv2.waitKey(400)
 
     cv2.destroyAllWindows()
