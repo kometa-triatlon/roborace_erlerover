@@ -25,10 +25,15 @@ SteeringControl::SteeringControl() {
     std::string outputLayer;
     nh.param<std::string>("model_output", outputLayer, "");
 
-    nh.param("zero_value", mZeroValue, 1500.f);
-    nh.param("amplitude", mAmplitude, 700.f);
-    nh.param("channel", mMavrosChannel, 1);
+    nh.param("steering_zero_value", mSteeringZeroValue, 1500.f);
+    nh.param("steering_amplitude", mSteeringAmplitude, 700.f);
+    nh.param("steering_channel", mSteeringChannel, 0);
 
+    nh.param("throttle_zero_value", mThrottleZeroValue, 1494.f);
+    nh.param("throttle_default_value", mThrottleDefaultValue, 1550.f);
+    nh.param("throttle_shrink_value", mThrottleShrinkValue, 10.f);
+    nh.param("throttle_channel", mThrottleChannel, 2);
+    
     ROS_INFO("Camera topic: %s", cameraTopic.c_str());
     ROS_INFO("Output topic: %s", outputTopic.c_str());
     ROS_INFO("Rate: %.1f", mProcessRate);
@@ -43,28 +48,19 @@ SteeringControl::SteeringControl() {
     mOutputPublisher  = nh.advertise<mavros_msgs::OverrideRCIn>(outputTopic, 1);
 }
 
-SteeringControl::~SteeringControl() {
-}
+SteeringControl::~SteeringControl() {}
 
-void SteeringControl::spin() {
+void SteeringControl::spinOnce() {
+  if (mLastImage != nullptr) {
+      float model_predicted_steering = mModel.predictSteering(mLastImage);
+      int steering_value = static_cast<int>(mSteeringZeroValue + mSteeringAmplitude * model_predicted_steering);
+      int throttle_value = static_cast<int>(mThrottleDefaultValue - mThrottleShrinkValue * fabs(model_predicted_steering));
 
-    ros::Rate rate(mProcessRate);
-    ros::spinOnce();
-    while (ros::ok()) {
-
-        if (mLastImage != nullptr) {
-
-            int steering_value = static_cast<int>(
-                mZeroValue + mAmplitude * mModel.predictSteering(mLastImage)
-                                                  );
-
-            auto msg = boost::make_shared<mavros_msgs::OverrideRCIn>();
-            msg->channels[mMavrosChannel] = steering_value;
-            mOutputPublisher.publish(msg);
-        }
-        ros::spinOnce();
-        rate.sleep();
-    }
+      auto msg = boost::make_shared<mavros_msgs::OverrideRCIn>();
+      msg->channels[mSteeringChannel] = steering_value;
+      msg->channels[mThrottleChannel] = throttle_value;
+      mOutputPublisher.publish(msg);
+  }
 }
 
 void SteeringControl::imageCallback(const sensor_msgs::Image::ConstPtr& msg) {
@@ -72,4 +68,12 @@ void SteeringControl::imageCallback(const sensor_msgs::Image::ConstPtr& msg) {
     ROS_DEBUG("imageCallback: %u, %u, %s", img.width, img.height, img.encoding.c_str());
 
     mLastImage = msg;
+}
+
+
+void SteeringControl::shutdown() {
+    auto msg = boost::make_shared<mavros_msgs::OverrideRCIn>();
+    msg->channels[mSteeringChannel] = mSteeringZeroValue;
+    msg->channels[mThrottleChannel] = mThrottleZeroValue;
+    mOutputPublisher.publish(msg);
 }

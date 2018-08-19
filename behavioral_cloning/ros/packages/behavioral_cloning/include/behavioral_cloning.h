@@ -13,13 +13,19 @@ class SteeringControl
   public:
     SteeringControl();
     virtual ~SteeringControl();
-    void spin();
+    void spinOnce();
+    void shutdown();
 
   private:
 
-    float mZeroValue;
-    float mAmplitude;
-    int mMavrosChannel;
+    float mSteeringZeroValue;
+    float mSteeringAmplitude;
+    int mSteeringChannel;
+
+    float mThrottleZeroValue;
+    float mThrottleDefaultValue;
+    float mThrottleShrinkValue;
+    int mThrottleChannel;
 
     sensor_msgs::Image::ConstPtr mLastImage{nullptr};
     ros::Publisher mOutputPublisher;
